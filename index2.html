@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học tập & Đố vui GDĐP Thành phố Huế (10 - 11 - 12)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-hue { background-color: #8B0000; } /* Đỏ Cố đô */
+        .text-gold { color: #D4AF37; } /* Vàng Hoàng gia */
+        .bg-gold { background-color: #D4AF37; }
+        .border-gold { border-color: #D4AF37; }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen text-gray-800 font-sans">
+    <!-- Header -->
+    <header class="bg-hue text-white shadow-xl p-6 text-center border-b-4 border-gold">
+        <h1 class="text-2xl md:text-4xl font-bold text-gold uppercase tracking-wide">Giáo dục Địa phương tỉnh Thừa Thiên Huế</h1>
+        <p class="mt-2 text-amber-200 text-sm md:text-base">Hệ thống Trò chơi Đố vui & Tri thức Thiết thực (Khối 10 - 11 - 12)</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto my-6 p-4 md:p-6 bg-white rounded-xl shadow-lg border border-amber-200">
+        
+        <!-- BỘ LỌC ĐỐI TƯỢNG VÀ CHỦ ĐỀ CHUẨN LỘ TRÌNH -->
+        <div class="mb-6 p-4 bg-amber-100/50 rounded-lg border border-amber-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Chọn Khối Lớp -->
+            <div>
+                <label class="block font-bold text-red-900 mb-2 text-sm md:text-base">🏫 Chọn Khối lớp (Khung QĐ 1100/QĐ-UBND):</label>
+                <select id="grade-select" onchange="applyFilters()" class="w-full p-2.5 border-2 rounded-lg bg-white border-amber-300 font-semibold text-gray-800 focus:outline-none focus:border-red-800">
+                    <option value="all">Tất cả Khối lớp (Khối 10, 11, 12)</option>
+                    <option value="10">Khối 10: Tự nhiên, Văn học DG & Mỹ thuật Nguyễn</option>
+                    <option value="11">Khối 11: Danh nhân, Nhã nhạc & Ca Huế</option>
+                    <option value="12">Khối 12: Di sản Cố đô, Làng nghề & Đô thị số</option>
+                </select>
+            </div>
+
+            <!-- Chọn Chủ Đề Bài Học -->
+            <div>
+                <label class="block font-bold text-red-900 mb-2 text-sm md:text-base">📚 Chọn Chủ đề bài học:</label>
+                <select id="category-select" onchange="applyFilters()" class="w-full p-2.5 border-2 rounded-lg bg-white border-amber-300 font-semibold text-gray-800 focus:outline-none focus:border-red-800">
+                    <option value="all">Tất cả Chủ đề bài học</option>
+                    <option value="Danh thắng & Thiên nhiên Huế">Danh thắng & Thiên nhiên Huế (Lớp 10)</option>
+                    <option value="Văn học Dân gian & Giai thoại">Văn học Dân gian & Giai thoại (Lớp 10)</option>
+                    <option value="Mỹ thuật Thời Nguyễn">Mỹ thuật Thời Nguyễn (Lớp 10)</option>
+                    <option value="Danh nhân Lịch sử & Văn hóa">Danh nhân Lịch sử & Văn hóa (Lớp 11)</option>
+                    <option value="Âm nhạc & Di sản Phi vật thể">Âm nhạc & Di sản Phi vật thể (Lớp 11)</option>
+                    <option value="Di sản Cố đô & Kiến trúc">Di sản Cố đô & Kiến trúc (Lớp 12)</option>
+                    <option value="Làng nghề Truyền thống Huế">Làng nghề Truyền thống Huế (Lớp 12)</option>
+                    <option value="Đô thị Di sản & Chuyển đổi số">Đô thị Di sản & Chuyển đổi số (Lớp 12)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container">
+            <div class="flex flex-wrap justify-between items-center border-b pb-4 mb-4 gap-2">
+                <div>
+                    <span id="grade-badge" class="bg-red-800 text-gold font-bold px-3 py-1 rounded-full text-xs md:text-sm mr-2">Khối 10</span>
+                    <span id="category-badge" class="bg-amber-200 text-amber-900 font-bold px-3 py-1 rounded-full text-xs md:text-sm">Chủ đề</span>
+                </div>
+                <span id="score" class="text-lg font-extrabold text-red-800">Điểm: 0</span>
+            </div>
+
+            <!-- Câu hỏi -->
+            <h2 id="question" class="text-lg md:text-xl font-bold mb-4 text-gray-900 leading-snug">Nội dung câu hỏi sẽ hiển thị ở đây...</h2>
+            
+            <!-- KHUNG HÌNH ẢNH MINH HỌA NỘI DUNG CÂU HỎI -->
+            <div id="image-container" class="mb-5 hidden text-center">
+                <img id="question-image" src="" alt="Hình ảnh minh họa bài học" class="max-h-64 md:max-h-72 mx-auto rounded-lg shadow-md border-2 border-amber-300 object-cover">
+                <p id="image-caption" class="text-xs text-gray-500 italic mt-1"></p>
+            </div>
+
+            <!-- Các nút đáp án -->
+            <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+
+            <!-- Thẻ Giải thích bài học thiết thực -->
+            <div id="explanation-box" class="hidden bg-blue-50 border-l-4 border-blue-600 p-4 rounded-lg mb-6 shadow-sm">
+                <h3 class="font-bold text-blue-900 flex items-center text-sm md:text-base">
+                    💡 Thông tin bài học thiết thực:
+                </h3>
+                <p id="explanation-text" class="text-blue-800 mt-1 text-sm leading-relaxed"></p>
+            </div>
+
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-hue hover:bg-red-900 text-gold font-bold py-3.5 rounded-lg transition duration-200 shadow-md text-base">
+                Câu hỏi tiếp theo ➔
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // DỮ LIỆU CÂU HỎI ĐƯỢC CẤU TRÚC CHUẨN LỘ TRÌNH GDĐP THỪA THIÊN HUẾ (KHỐI 10, 11, 12)
+        const allQuestions = [
+            // ================= KHỐI 10 =================
+            {
+                grade: "10",
+                category: "Danh thắng & Thiên nhiên Huế",
+                question: "Hai thực thể địa lý tự nhiên nào được mệnh danh là biểu tượng gắn bó chặt chẽ và định hình bản sắc văn hóa Cố đô Huế?",
+                image: "https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Sông Hương êm đềm chảy qua lòng thành phố Cố đô Huế",
+                options: ["Sông Hương & Núi Ngự", "Sông Bồ & Núi Bạch Mã", "Sông Truồi & Hòn Vượn", "Sông Hương & Đèo Hải Vân"],
+                answer: 0,
+                explanation: "Sông Hương và núi Ngự Bình là hai biểu tượng tự nhiên - văn hóa tiêu biểu, gắn liền với cảnh quan phong thủy kinh đô xưa và đời sống tâm hồn của người dân xứ Huế."
+            },
+            {
+                grade: "10",
+                category: "Văn học Dân gian & Giai thoại",
+                question: "Trong giai thoại hát bội Huế, hai anh hề đã ra câu đố chơi chữ 'Con chi vừa đực vừa cái?' để đố vị Tả quân nào?",
+                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Sân khấu nghệ thuật Tuồng / Hát bội truyền thống Huế",
+                options: ["Tả quân Lê Văn Duyệt", "Tả quân Nguyễn Huỳnh Đức", "Thương công Tùng Thiện Vương", "Ông Bềnh Thúc Đủ"],
+                answer: 0,
+                explanation: "Đáp án là con thằn lằn (ghép tiếng 'con' + 'thằng'). Anh hề tuồng đã dùng cách giải đố bất ngờ từ ngôn ngữ dân gian để mang lại tiếng cười hóm hỉnh và giải tỏa kịch tính."
+            },
+            {
+                grade: "10",
+                category: "Mỹ thuật Thời Nguyễn",
+                question: "Hệ màu sắc nào đóng vai trò chủ đạo trong tạo hình và mỹ thuật trang trí triều Nguyễn ở Thừa Thiên Huế?",
+                image: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Họa tiết nghệ thuật hoa văn cung đình thời Nguyễn",
+                options: ["Hệ màu Tam sắc", "Hệ màu Ngũ sắc (Ngũ hành)", "Hệ màu Đơn sắc", "Hệ màu Pastel hiện đại"],
+                answer: 1,
+                explanation: "Hệ màu ngũ sắc đóng vai trò chủ đạo (gắn liền triết lý ngũ hành), góp phần hoàn thiện các giá trị thẩm mỹ và ý nghĩa nhân văn cho công trình kiến trúc triều Nguyễn."
+            },
+
+            // ================= KHỐI 11 =================
+            {
+                grade: "11",
+                category: "Âm nhạc & Di sản Phi vật thể",
+                question: "Loại hình nghệ thuật âm nhạc đỉnh cao nào của triều Nguyễn đã được UNESCO ghi danh là Kiệt tác Di sản phi vật thể đại diện của nhân loại năm 2003?",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Biểu diễn Nhã nhạc Cung đình Huế",
+                options: ["Ca Huế trên sông Hương", "Nhã nhạc cung đình Huế", "Hát Chầu văn Huế", "Hát Bài chòi dân gian"],
+                answer: 1,
+                explanation: "Nhã nhạc cung đình Huế là loại hình âm nhạc chính thống triều Nguyễn, đại diện cho đỉnh cao nghệ thuật âm nhạc bác học truyền thống Việt Nam."
+            },
+            {
+                grade: "11",
+                category: "Danh nhân Lịch sử & Văn hóa",
+                question: "Danh nhân văn hóa, nhà cải cách nổi tiếng nào người Thừa Thiên Huế là vị quan tiên phong đề xướng tư tưởng đổi mới canh tân đất nước thế kỷ XIX?",
+                image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Tư liệu thơ văn danh nhân văn hóa Huế",
+                options: ["Tùng Thiện Vương", "Đặng Huy Trứ", "Tuy Lý Vương", "Mai Am"],
+                answer: 1,
+                explanation: "Đặng Huy Trứ (làng Thanh Lương, Huế) là nhà canh tân đất nước hàng đầu thế kỷ XIX, ông đặt nền móng cho ngành nhiếp ảnh và thương nghiệp tại Việt Nam."
+            },
+
+            // ================= KHỐI 12 =================
+            {
+                grade: "12",
+                category: "Di sản Cố đô & Kiến trúc",
+                question: "Loại hình kiến trúc nhà ở truyền thống độc đáo nào ở Huế nổi tiếng với kết cấu khung gỗ lắp ghép mộng và sân vườn sinh thái?",
+                image: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Nhà Rường - Kiến trúc nhà vườn sinh thái xứ Huế",
+                options: ["Nhà ống đô thị", "Nhà Rường - Nhà Vườn Huế", "Nhà sàn vùng cao", "Biệt thự Pháp cổ"],
+                answer: 1,
+                explanation: "Nhà rường Huế là di sản kiến trúc độc đáo, kết hợp hài hòa giữa không gian sống con người với thiên nhiên sinh thái đặc trưng của đất Cố đô."
+            },
+            {
+                grade: "12",
+                category: "Làng nghề Truyền thống Huế",
+                question: "Làng nghề truyền thống nổi tiếng nào tại Thừa Thiên Huế chuyên chế tác những bông hoa giấy rực rỡ phục vụ lễ nghi tín ngưỡng dân gian?",
+                image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Nghệ thuật làm Hoa giấy truyền thống Huế",
+                options: ["Làng đúc đồng Phường Đúc", "Làng hoa giấy Thanh Tiên", "Làng gốm Phước Tích", "Làng nón lá Tây Hồ"],
+                answer: 1,
+                explanation: "Làng hoa giấy Thanh Tiên (xã Phú Mẫu) có lịch sử hơn 300 năm, nổi tiếng với hoa sen giấy và hoa giấy thờ cúng tinh xảo."
+            },
+            {
+                grade: "12",
+                category: "Đô thị Di sản & Chuyển đổi số",
+                question: "Ứng dụng di động tiên phong của tỉnh Thừa Thiên Huế từng đạt giải thưởng Chuyển đổi số xuất sắc và Đô thị thông minh Châu Á là ứng dụng nào?",
+                image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+                caption: "Hình ảnh: Công nghệ số và Đô thị thông minh Hue-S",
+                options: ["SmartHue", "Hue-S", "VNeID", "Hue Citi"],
+                answer: 1,
+                explanation: "Hue-S là nền tảng di động dùng chung kết nối chính quyền số, kinh tế số và xã hội số, hỗ trợ người dân phản ánh hiện trường và tra cứu dịch vụ đô thị thông minh."
+            }
+        ];
+
+        let activeQuestions = [...allQuestions];
+        let currentIdx = 0;
+        let score = 0;
+
+        function applyFilters() {
+            const selectedGrade = document.getElementById('grade-select').value;
+            const selectedCategory = document.getElementById('category-select').value;
+
+            activeQuestions = allQuestions.filter(q => {
+                const matchGrade = (selectedGrade === 'all' || q.grade === selectedGrade);
+                const matchCategory = (selectedCategory === 'all' || q.category === selectedCategory);
+                return matchGrade && matchCategory;
+            });
+
+            currentIdx = 0;
+            score = 0;
+            document.getElementById('score').innerText = `Điểm: ${score}`;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const container = document.getElementById('quiz-container');
+            
+            if (activeQuestions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10">
+                        <p class="text-lg text-red-800 font-bold mb-4">⚠️ Không có câu hỏi nào thuộc kết hợp bộ lọc này!</p>
+                        <button onclick="location.reload()" class="bg-hue text-gold px-6 py-2.5 rounded-lg font-bold shadow hover:bg-red-900">Đặt lại bộ lọc 🔄</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = activeQuestions[currentIdx];
+            document.getElementById('grade-badge').innerText = `Khối ${q.grade}`;
+            document.getElementById('category-badge').innerText = q.category;
+            document.getElementById('question').innerText = `Câu ${currentIdx + 1}/${activeQuestions.length}: ${q.question}`;
+            
+            // XỬ LÝ NỔI BẬT HÌNH ẢNH MINH HỌA
+            const imgContainer = document.getElementById('image-container');
+            const imgTag = document.getElementById('question-image');
+            const imgCaption = document.getElementById('image-caption');
+            
+            if (q.image && q.image.trim() !== "") {
+                imgTag.src = q.image;
+                imgCaption.innerText = q.caption || "Hình ảnh minh họa bài học";
+                imgContainer.classList.remove('hidden');
+            } else {
+                imgContainer.classList.add('hidden');
+            }
+
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 border-2 rounded-lg hover:bg-amber-100 font-medium transition duration-150 border-gray-200 text-gray-800 shadow-sm";
+                btn.innerText = opt;
+                btn.onclick = () => selectAnswer(idx, btn);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIdx, btn) {
+            const q = activeQuestions[currentIdx];
+            const buttons = document.getElementById('options').children;
+            for (let b of buttons) { b.disabled = true; }
+
+            if (selectedIdx === q.answer) {
+                btn.className = "w-full text-left p-4 border-2 rounded-lg bg-green-100 border-green-600 font-bold text-green-900 shadow-sm";
+                score += 10;
+                document.getElementById('score').innerText = `Điểm: ${score}`;
+            } else {
+                btn.className = "w-full text-left p-4 border-2 rounded-lg bg-red-100 border-red-500 font-bold text-red-900 shadow-sm";
+                buttons[q.answer].className = "w-full text-left p-4 border-2 rounded-lg bg-green-100 border-green-600 font-bold text-green-900 shadow-sm";
+            }
+
+            document.getElementById('explanation-text').innerText = q.explanation;
+            document.getElementById('explanation-box').classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < activeQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').innerHTML = `
+                    <div class="text-center py-8">
+                        <h2 class="text-3xl font-bold text-hue mb-3">🎉 Hoàn thành Thử thách Bài học!</h2>
+                        <p class="text-xl mb-6">Tổng điểm của bạn: <span class="font-extrabold text-red-700">${score}</span> / ${activeQuestions.length * 10}</p>
+                        <button onclick="location.reload()" class="bg-hue text-gold px-6 py-3 rounded-lg font-bold hover:bg-red-900 shadow-md">Thử thách lại 🔄</button>
+                    </div>
+                `;
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
